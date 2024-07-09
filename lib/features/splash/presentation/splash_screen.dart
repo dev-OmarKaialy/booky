@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Row(),
+          50.verticalSpace,
           SizedBox(
             width: .6.sw,
             child: FittedBox(

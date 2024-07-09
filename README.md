@@ -35,8 +35,8 @@ Booky App Is Your Catalog For Books, store the books in localstorage using Hive 
 </p>
 
 <p align="center">
-  <img src="screenshots/search.jpg" alt="Search Screen" width="45%" />
-  <img src="screenshots/wishlist.jpg" alt="Wishlist Screen" width="45%" />
+  <img src="screenshots/details.jpg" alt="Search Screen" width="45%" />
+  <img src="screenshots/settings.jpg" alt="Wishlist Screen" width="45%" />
 </p>
 
 ## Features
