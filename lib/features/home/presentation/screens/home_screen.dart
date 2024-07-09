@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:text_marquee/text_marquee.dart';
 
+import '../../../../core/model/book_model.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/side_bar.dart';
 
@@ -77,24 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisSpacing: 20),
                 itemCount: state.books.length,
                 itemBuilder: (_, index) {
-                  return GestureDetector(
-                    onLongPress: () {
-                      context
-                          .read<HomeBloc>()
-                          .add(DeleteBookEvent(index: state.books[index].key));
-                    },
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailsScreen(
-                                  index: state.books[index].key)));
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: Showcase(
+                  return Builder(builder: (context) {
+                    return SharedPreferencesService.getShowCase() == true
+                        ? BookWidget(
+                            book: state.books[index],
+                          )
+                        : Showcase(
                             key: _secondKey,
                             disposeOnTap: true,
                             onTargetClick: () {
@@ -110,60 +99,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             description: LocaleKeys.homeScreen_showcase2.tr(),
                             child: Showcase(
-                              key: _thirdKey,
-                              disposeOnTap: false,
-                              onTargetClick: () {},
-                              onTargetLongPress: () async {
-                                context.read<HomeBloc>().add(DeleteBookEvent(
-                                    index: state.books[index].key));
-                                ShowCaseWidget.of(context).dismiss();
-                                await SharedPreferencesService.setShowCase();
-                              },
-                              description: LocaleKeys.homeScreen_showcase4.tr(),
-                              disableBarrierInteraction: true,
-                              showArrow: true,
-                              child: Card(
-                                elevation: 6,
-                                clipBehavior: Clip.hardEdge,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: state.books[index].image == null
-                                    ? Image.asset(
-                                        'assets/images/placeholder.png',
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.memory(
-                                        state.books[index].image!,
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        2.verticalSpace,
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: TextMarquee(
-                              state.books[index].title,
-                              style: context.textTheme.titleLarge!,
-                            ),
-                          ),
-                        ),
-                        2.verticalSpace,
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: TextMarquee(
-                              state.books[index].author,
-                              style: context.textTheme.titleSmall!,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                                key: _thirdKey,
+                                disposeOnTap: false,
+                                onTargetClick: () {},
+                                onTargetLongPress: () async {
+                                  context.read<HomeBloc>().add(DeleteBookEvent(
+                                      index: state.books[index].key));
+                                  ShowCaseWidget.of(context).dismiss();
+                                  await SharedPreferencesService.setShowCase();
+                                },
+                                description:
+                                    LocaleKeys.homeScreen_showcase4.tr(),
+                                disableBarrierInteraction: true,
+                                showArrow: true,
+                                child: BookWidget(book: state.books[index])));
+                  });
                 },
               ),
             );
@@ -174,17 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           description: LocaleKeys.homeScreen_showcase1.tr(),
           disableBarrierInteraction: true,
           showArrow: true,
-          onTargetClick: () {
-            showAdaptiveDialog(
-              context: context,
-              builder: (context) {
-                return const AddBookDialog();
-              },
-            ).whenComplete(() {
-              ShowCaseWidget.of(context).startShowCase([_secondKey]);
-            });
-          },
-          disposeOnTap: true,
           child: FloatingActionButton(
             onPressed: () {
               showAdaptiveDialog(
@@ -200,6 +139,69 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BookWidget extends StatelessWidget {
+  const BookWidget({super.key, required this.book});
+
+  final BookModel book;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPress: () {
+        context.read<HomeBloc>().add(DeleteBookEvent(index: book.key));
+      },
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailsScreen(index: book.key)));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Card(
+              elevation: 6,
+              clipBehavior: Clip.hardEdge,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: book.image == null
+                  ? Image.asset(
+                      'assets/images/placeholder.png',
+                      fit: BoxFit.cover,
+                    )
+                  : Image.memory(
+                      book.image!,
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+          2.verticalSpace,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: TextMarquee(
+                book.title,
+                style: context.textTheme.titleLarge!,
+              ),
+            ),
+          ),
+          2.verticalSpace,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: TextMarquee(
+                book.author,
+                style: context.textTheme.titleSmall!,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
