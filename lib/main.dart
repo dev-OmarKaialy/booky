@@ -54,6 +54,7 @@ class _MainAppState extends State<MainApp> {
       builder: (context, state) {
         return ShowCaseWidget(builder: (context) {
           return ScreenUtilInit(
+            splitScreenMode: false,
             designSize: const Size(375, 812),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

@@ -9,10 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:text_marquee/text_marquee.dart';
 
-import '../../../../core/model/book_model.dart';
 import '../bloc/home_bloc.dart';
+import '../widgets/book_widget.dart';
 import '../widgets/side_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -124,6 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
           description: LocaleKeys.homeScreen_showcase1.tr(),
           disableBarrierInteraction: true,
           showArrow: true,
+          disposeOnTap: true,
+          onTargetClick: () {
+            ShowCaseWidget.of(context).startShowCase([_secondKey]);
+          },
           child: FloatingActionButton(
             onPressed: () {
               showAdaptiveDialog(
@@ -139,69 +142,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class BookWidget extends StatelessWidget {
-  const BookWidget({super.key, required this.book});
-
-  final BookModel book;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPress: () {
-        context.read<HomeBloc>().add(DeleteBookEvent(index: book.key));
-      },
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailsScreen(index: book.key)));
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Card(
-              elevation: 6,
-              clipBehavior: Clip.hardEdge,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: book.image == null
-                  ? Image.asset(
-                      'assets/images/placeholder.png',
-                      fit: BoxFit.cover,
-                    )
-                  : Image.memory(
-                      book.image!,
-                      fit: BoxFit.cover,
-                    ),
-            ),
-          ),
-          2.verticalSpace,
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: TextMarquee(
-                book.title,
-                style: context.textTheme.titleLarge!,
-              ),
-            ),
-          ),
-          2.verticalSpace,
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: TextMarquee(
-                book.author,
-                style: context.textTheme.titleSmall!,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
