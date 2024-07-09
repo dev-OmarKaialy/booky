@@ -1,4 +1,6 @@
+import 'package:book_catalog/core/services/shared_preferences_service.dart';
 import 'package:book_catalog/core/widgets/yes_no_dialog.dart';
+import 'package:book_catalog/features/home/presentation/bloc/home_bloc.dart';
 import 'package:book_catalog/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  late final ValueNotifier<String> language;
+  late ValueNotifier<String> language;
   @override
   void didChangeDependencies() {
     language = ValueNotifier(context.locale.languageCode);
@@ -54,6 +56,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           await context.setLocale(
                             Locale(!s ? 'en' : 'ar'),
                           );
+                          SharedPreferencesService.setLanguage(
+                              !s ? 'en' : 'ar');
                           if (context.mounted) {
                             language.value = context.locale.languageCode;
                           }
@@ -66,7 +70,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   builder: (context) {
                     return YesNoDialog(
                         title: LocaleKeys.settingScreen_clearAllData.tr(),
-                        onTapYes: () {});
+                        onTapYes: () {
+                          context.read<HomeBloc>().add(ClearAllDataEvent());
+                        });
                   });
             },
             title: Text(LocaleKeys.settingScreen_clearData.tr()),

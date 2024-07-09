@@ -50,7 +50,8 @@ class SideBar extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SettingScreen()));
+                        // ignore: prefer_const_constructors
+                        builder: (context) => SettingScreen()));
               },
               leading: const Icon(Icons.settings),
               title: Text(LocaleKeys.settingScreen_settings.tr()),

@@ -10,6 +10,16 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState()) {
     final box = Hive.box<BookModel>('books');
+    on<ClearAllDataEvent>((event, emit) async {
+      await box.clear();
+      emit(HomeState(
+          books: box.values.toList(),
+          favorites: box.values
+              .where(
+                (element) => element.favored,
+              )
+              .toList()));
+    });
     on<InitHomeEvent>((event, emit) {
       emit(state.copyWith(books: box.values.toList()));
     });

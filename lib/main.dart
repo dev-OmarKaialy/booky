@@ -22,7 +22,7 @@ void main() async {
   runApp(EasyLocalization(
       path: 'assets/translations',
       saveLocale: true,
-      startLocale: const Locale('en'),
+      startLocale: Locale(SharedPreferencesService.getLanguage() ?? 'en'),
       supportedLocales: const [
         Locale('en'),
         Locale('ar'),
@@ -57,6 +57,8 @@ class _MainAppState extends State<MainApp> {
             splitScreenMode: false,
             designSize: const Size(375, 812),
             child: MaterialApp(
+              themeAnimationCurve: Curves.easeInToLinear,
+              themeAnimationDuration: Durations.long3,
               debugShowCheckedModeBanner: false,
               builder: BotToastInit(),
               themeMode: state.darkTheme ? ThemeMode.dark : ThemeMode.light,

@@ -32,4 +32,12 @@ class SharedPreferencesService {
   static setTheme(bool value) {
     return _sp.setBool('theme', value);
   }
+
+  static getLanguage() {
+    return _sp.getString('language');
+  }
+
+  static setLanguage(String value) {
+    return _sp.setString('language', value);
+  }
 }

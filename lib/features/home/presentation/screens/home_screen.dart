@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../../../../core/widgets/no_data.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/book_widget.dart';
 import '../widgets/side_bar.dart';
@@ -68,53 +69,62 @@ class _HomeScreenState extends State<HomeScreen> {
                 context.read<HomeBloc>().add(InitHomeEvent());
                 return Future.value();
               },
-              child: GridView.builder(
-                padding: EdgeInsets.all(20.sp),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: .65,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20),
-                itemCount: state.books.length,
-                itemBuilder: (_, index) {
-                  return Builder(builder: (context) {
-                    return SharedPreferencesService.getShowCase() == true
-                        ? BookWidget(
-                            book: state.books[index],
-                          )
-                        : Showcase(
-                            key: _secondKey,
-                            disposeOnTap: true,
-                            onTargetClick: () {
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => DetailsScreen(
-                                              index: state.books[index].key)))
-                                  .whenComplete(() {
-                                ShowCaseWidget.of(context)
-                                    .startShowCase([_thirdKey]);
-                              });
-                            },
-                            description: LocaleKeys.homeScreen_showcase2.tr(),
-                            child: Showcase(
-                                key: _thirdKey,
-                                disposeOnTap: false,
-                                onTargetClick: () {},
-                                onTargetLongPress: () async {
-                                  context.read<HomeBloc>().add(DeleteBookEvent(
-                                      index: state.books[index].key));
-                                  ShowCaseWidget.of(context).dismiss();
-                                  await SharedPreferencesService.setShowCase();
-                                },
-                                description:
-                                    LocaleKeys.homeScreen_showcase4.tr(),
-                                disableBarrierInteraction: true,
-                                showArrow: true,
-                                child: BookWidget(book: state.books[index])));
-                  });
-                },
-              ),
+              child: state.books.isEmpty
+                  ? NoData(
+                      title: LocaleKeys.homeScreen_nodata.tr(),
+                    )
+                  : GridView.builder(
+                      padding: EdgeInsets.all(20.sp),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: .65,
+                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 20),
+                      itemCount: state.books.length,
+                      itemBuilder: (_, index) {
+                        return Builder(builder: (context) {
+                          return SharedPreferencesService.getShowCase() == true
+                              ? BookWidget(
+                                  book: state.books[index],
+                                )
+                              : Showcase(
+                                  key: _secondKey,
+                                  disposeOnTap: true,
+                                  onTargetClick: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => DetailsScreen(
+                                                index: state.books[index]
+                                                    .key))).whenComplete(() {
+                                      ShowCaseWidget.of(context)
+                                          .startShowCase([_thirdKey]);
+                                    });
+                                  },
+                                  description:
+                                      LocaleKeys.homeScreen_showcase2.tr(),
+                                  child: Showcase(
+                                      key: _thirdKey,
+                                      disposeOnTap: false,
+                                      onTargetClick: () {},
+                                      onTargetLongPress: () async {
+                                        context.read<HomeBloc>().add(
+                                            DeleteBookEvent(
+                                                index: state.books[index].key));
+                                        ShowCaseWidget.of(context).dismiss();
+                                        await SharedPreferencesService
+                                            .setShowCase();
+                                      },
+                                      description:
+                                          LocaleKeys.homeScreen_showcase4.tr(),
+                                      disableBarrierInteraction: true,
+                                      showArrow: true,
+                                      child: BookWidget(
+                                          book: state.books[index])));
+                        });
+                      },
+                    ),
             );
           },
         ),

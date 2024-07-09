@@ -10,6 +10,9 @@ class ThemeManager {
       surface: Color(0xff2d6a4f), // Surface color
       onSurface: Colors.white, // Color for text/icons on surface
     ),
+    switchTheme: SwitchThemeData(
+        thumbColor: WidgetStatePropertyAll(Colors.white.withOpacity(.2)),
+        overlayColor: WidgetStatePropertyAll(Colors.white.withOpacity(.3))),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xff1b4332), // AppBar background color
       iconTheme: IconThemeData(color: Colors.white), // AppBar icon color
@@ -27,6 +30,11 @@ class ThemeManager {
       surface: Colors.white,
       onSurface: Colors.black,
     ),
+    switchTheme: SwitchThemeData(
+        thumbColor:
+            WidgetStatePropertyAll(const Color(0xff5abd8c).withOpacity(.2)),
+        overlayColor:
+            WidgetStatePropertyAll(const Color(0xff5abd8c).withOpacity(.3))),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xff5ABD8C),
       iconTheme: IconThemeData(color: Colors.white),

@@ -14,6 +14,7 @@ class AboutMeDialog extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(
         height: MediaQuery.sizeOf(context).height * .5,
+        width: .8.sw,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
@@ -91,27 +92,27 @@ class AboutMeDialog extends StatelessWidget {
                   ),
                 ],
               ),
-              FittedBox(
-                fit: BoxFit.fitWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Telegram Channel:    ',
-                      style: context.textTheme.titleSmall,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        launchUrl(Uri.parse('https://t.me/Omar_k_flutter'));
-                      },
-                      child: Text(
-                        '@Omar_k_flutter',
-                        style: context.textTheme.titleSmall
-                            ?.copyWith(decoration: TextDecoration.underline),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Telegram Channel:',
+                    style: context.textTheme.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      launchUrl(Uri.parse('https://t.me/Omar_k_flutter'));
+                    },
+                    child: Text(
+                      '@Omar_k_flutter',
+                      style: context.textTheme.titleSmall?.copyWith(
+                        decoration: TextDecoration.underline,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               ElevatedButton(
                   onPressed: () {

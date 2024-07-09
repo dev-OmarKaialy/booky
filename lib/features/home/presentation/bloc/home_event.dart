@@ -54,3 +54,5 @@ class ToggleFavorite extends HomeEvent {
     required this.index,
   });
 }
+
+class ClearAllDataEvent extends HomeEvent {}
